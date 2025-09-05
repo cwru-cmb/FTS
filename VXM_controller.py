@@ -18,7 +18,7 @@ def mm_to_steps(mm):
     return int((mm / .00635) + .5)
 
 
-def VXM_online():
+def VXM_online(port=None):
     """initiates communication with the VXM and puts it in on-line mode. This function also takes
     the stage to the home position, at the center of the linear stage, and defines this point as zero. To find 
     the COM port in Windows, go to control panel. Open System and Security. Choose System. Then,
@@ -27,8 +27,11 @@ def VXM_online():
     import serial, os #with Python, you have to import each group of functions, called "modules", that you will use. 
     global serport, ser, serial #This makes it so that you don't have to import the module for every function you use. 
     ser = serial.Serial() #there are lots of functions within serial. Setting ser as the name of serial.Serial() is just shorthand.
-    ser.port = '/dev/ttyUSB0' #setting ser.port equal to this string variable 
-    os.system('sudo chmod o+rw /dev/ttyUSB0') #writes directly to OS... like typing into command prompt
+    if port is None:
+        port = '/dev/ttyUSB0'
+    ser.port = port #setting ser.port equal to this string variable 
+    sudo_string = 'sudo chmod o+rw ' + port
+    os.system(sudo_string) #writes directly to OS... like typing into command prompt
     serport = ser.port    
     ser.baudrate = 9600 #These next several lines are specific to working with serial ports. It just sets up communication.
     ser.bytesize = serial.EIGHTBITS
@@ -41,13 +44,13 @@ def VXM_online():
     ser.writeTimeout = 2
     ser.open()
     if ser.isOpen():
-            ser.flushInput()
-            ser.flushOutput()
-            ser.write('F')
-            print 'opened successfully' #your standard Python print syntax
-	    ser.close()
-	    VXM_home_position()
-    else: print 'not opened successfully'
+        ser.flushInput()
+        ser.flushOutput()
+        ser.write('F'.encode())
+        print('opened successfully') #your standard Python print syntax
+        ser.close()
+        VXM_home_position()
+    else: print('not opened successfully')
 
 def VXM_home_position():
     """returns the slide to it's home position at x = 0, at the center of the slide."""
@@ -57,13 +60,13 @@ def VXM_home_position():
     scan('+', 10, 78.61935)
     time.sleep(10)
     ser.open() 
-    ser.write('N')
+    ser.write('N'.encode())
     ser.close()
     
 def VXM_to_position(destination):
     """receives a destination in units of millimeters, then commands the slide there."""
     ser.open()    
-    ser.write('C,X')
+    ser.write('C,X'.encode())
     curr_pos = int(ser.readline()) #here I have used the "int" function. Python has 3 primary data types - 
     # strings, integers, and floats. Certain functions require a certain data type. To convert between data types,
     # you can use the functions str(x), int(x), and float(x). Floats are decimals. Strings are text. Integers are...
@@ -71,9 +74,10 @@ def VXM_to_position(destination):
     if mm_to_steps(destination) != curr_pos: #here I have used '!=' which returns true/false, and means "does not equal"
     #if it is true, it will run the script in the if statement. If it is false, it goes to the else statement.
         move = str(mm_to_steps(destination) - curr_pos)
-        ser.write('C,I1M'+move+',R,C')
+        string_4 ='C,I1M'+move+',R,C' 
+        ser.write(string_4.encode())
     else:
-        print "that is the current position."
+        print( "that is the current position.")
     ser.close()
 
 def VXM_get_position(command):
@@ -81,9 +85,9 @@ def VXM_get_position(command):
     It receives a string, either 'print' or 'return' and performs the operation
     commanded. Both print and return give the value in units of millimeters."""
     ser.open()    
-    ser.write('C,X')
+    ser.write('C,X'.encode())
     if command == 'print':
-        print str(steps_to_mm(int(ser.readline()))) + 'mm'
+        print(str(steps_to_mm(int(ser.readline()))) + 'mm')
     elif command == 'return':   
         return steps_to_mm(int(ser.readline()))
     ser.close()
@@ -99,10 +103,12 @@ def scan(direction, speed, distance):
             sign = 1
         else:
             sign = -1
-        ser.write('C,SA1M'+speed+',R')
-        ser.write('I1M'+str(sign*mm_to_steps(distance))+',R')
+        string1 = 'C,SA1M'+speed + ',R'
+        ser.write(string1.encode())
+        string2 = 'I1M'+ str(sign*mm_to_steps(distance))+',R'
+        ser.write(string2.encode())
     else: 
-        print 'error: maximum speed is 38.1 mm/s'
+        print('error: maximum speed is 38.1 mm/s')
     ser.close()
     
 def scanset(direction, speed, distance, n):
@@ -117,7 +123,8 @@ def scanset(direction, speed, distance, n):
         speed = str(mm_to_steps(speed))
         command = str(mm_to_steps(distance))
         code = 'C,'
-        ser.write('C,SA1M'+speed+',R')
+        string_3 ='C,SA1M'+speed+',R' 
+        ser.write(string_3.encode())
         if direction == '+':
             for i in range(n):
                 code = code+'I1M'+command+',I1M-'+command+','       
@@ -125,15 +132,15 @@ def scanset(direction, speed, distance, n):
             for i in range(n):
                 code = code+'I1M-'+command+',I1M'+command+','
         code = code+'R'
-        print "Running Scan " + str(n)
-        ser.write(code)
+        print("Running Scan " + str(n))
+        ser.write(code.encode())
     else: 
-        print 'error: maximum speed is 38.1 mm/s'
+        print('error: maximum speed is 38.1 mm/s')
     ser.close()
 
 def tell(str):
     ser.open()
-    ser.write(str)
+    ser.write(str.encode())
     ser.close()
 
 def show_pos():
