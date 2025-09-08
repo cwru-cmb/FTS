@@ -17,13 +17,15 @@ Moving the Mirror:
  - The script will display “opened successfully” but will hang until the stage is centered at position 0.
 
 - To get the position at any time you may enter v.VXM_get_position(‘print’)
- - v.show_pos() to update position
-- To tell the stage to move to position ‘pos’ enter v.VXM_to_position(pos)... pos may be positive or negative (-77 is closest to chopper, 77 is furthest). I generally start the FTS scans from position -77.
+ - v.show_pos() to update position, but it does so in a loop forever and doesn't close the serial port when you control-c out of it.
+- To tell the stage to move to position ‘pos’ enter v.VXM_to_position(pos)... pos may be positive or negative (-77 is furthest from grid, 77 is closest). I generally start the FTS scans from position -77.
 
 To perform the scans, you can use scanset:	
 - v.scanset(direction, speed, distance, n)	
  - Where speed is in [mm/s] distance is in [mm] and direction is ‘+’ or ‘-’.
-- If starting from position -77, then you will use: v.scanset(‘+’,2,154,20)  to scan in positive direction at a speed of 2 mm/s for 154 mm, then come back and repeat 20 times ( I think one scan is up AND back).
+- If starting from position -77, then you will use: v.scanset(‘+’,2,154,20)  
+to scan in positive direction at a speed of 2 mm/s for 154 mm, 
+then come back and repeat 20 times (one scan is up AND back).
 	
 TROUBLESHOOTING!
 - Make sure the controller box is powered on.
