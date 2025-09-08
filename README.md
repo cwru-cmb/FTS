@@ -12,8 +12,8 @@ Moving the Mirror:
 - Plug in the stage controller to the outlet and the computer. Make sure the controller box is TURNED ON!!! 
 - The control code is called “VXM_controller.py”
 - Open an Ipython session in the home dir. Import the script, for example if we import VXM_controller as v, then to open the connection and ‘home’ the stage, use
-		v.VXM_online()
- - For some reason the code uses ‘sudo’ so you are required to enter the password
+		v.VXM_online(port=portname)
+ - The code uses ‘sudo’ to make sure the port is read/write by users, so you are required to enter the password
  - The script will display “opened successfully” but will hang until the stage is centered at position 0.
 
 - To get the position at any time you may enter v.VXM_get_position(‘print’)
