@@ -4,7 +4,7 @@ This is code to run the original FTS, built long ago by Eric Torbet, currently u
 
 Relevant info:
 - The focal length of the FTS parabolic mirror (if that's installed) is 24”. The distance from focusing mirror to the top of the FTS is something like 13.5”
-
+- As the mirror moves at velocity $v$
 
 Notes, I think from Allen Foster:
 
