@@ -4,9 +4,9 @@ This is code to run the original FTS, built long ago by Eric Torbet, currently u
 
 Relevant info:
 - The focal length of the FTS parabolic mirror (if that's installed) is 24”. The distance from focusing mirror to the top of the FTS is something like 13.5”
-- As the mirror moves at velocity $v$, the optical path length varies as $\2v$, so the phase at a wavelength $\lambda$ varies as $\phi(t) = 2 \pi \cdot 2 v t / \lambda$.
-  Thus, the signal, looks like $\cos{(\phi(t))} = \cos{( 2\pi 2 v t/\lambda) }$  From this we can see that the detector modulation signal frequency is $f = 2 v / \lambda = 2 v \nu/c$.
-  This allows us to convert from the frequency bin of a detector FFT to a photon frequency using $\nu = f c / (2 v)$.
+- As the mirror moves at velocity $v_m$, the optical path length varies as $2v_m$, so the phase at a wavelength $\lambda$ varies as $\phi(t) = 2 \pi \cdot 2 v_m t / \lambda$.
+  Thus, the signal, looks like $\cos{(\phi(t))} = \cos{( 2\pi \cdot 2 v_m t/\lambda) }$  From this we can see that the detector modulation signal frequency is $f = 2 v_m / \lambda = 2 v_m \nu/c$.
+  This allows us to convert from the frequency bin of a detector FFT to a photon frequency using $\nu = f c / (2 v_m)$.
 
 Notes, I think from Allen Foster:
 
